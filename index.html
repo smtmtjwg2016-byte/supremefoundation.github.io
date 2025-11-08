@@ -121,9 +121,76 @@ form.addEventListener('submit', function(ev){
   else { throw new Error(res && res.error ? res.error : 'Unknown error'); }
 })
 .catch(err => { msg.style.color='red'; msg.textContent='Submit failed: ' + err.message; });
-</script>
+<script>
+/* 👇 अपने Apps Script वेबऐप का URL यहाँ डालें */
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybVCtJ7LtUvzVUSDsT_lZh9Mqc1RDaOn5tsWR5Bgt-tXuGUyIn7nOskr76uW0xYlXKhA/exec";
+
+const form = document.getElementById('resignForm');
+const msg = document.getElementById('msg');
+
+form.addEventListener('submit', function(ev){
+  ev.preventDefault();
+
+  const f = ev.target;
+  const file = document.getElementById('file').files[0];
+  if (!file) {
+    msg.style.color = 'red';
+    msg.textContent = '⚠️ कृपया फ़ाइल अपलोड करें (PDF या Image)।';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function() {
+    // Form का डेटा तैयार करें
+    const payload = {
+      srNo: f.srNo.value.trim(),
+      volunteerName: f.volunteerName.value.trim(),
+      location: f.location.value.trim(),
+      coordinatorName: f.coordinatorName.value.trim(),
+      dateISO: f.dateISO.value,
+      reason: f.reason.value.trim(),
+      file: {
+        name: file.name,
+        mimeType: file.type,
+        dataUrl: reader.result
+      }
+    };
+
+    msg.style.color = 'black';
+    msg.textContent = '⏳ Submitting...';
+
+    // Fetch — text/plain ताकि preflight न हो
+    fetch(WEB_APP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: JSON.stringify(payload)
+    })
+    .then(async (r) => {
+      const text = await r.text();
+      if (!r.ok) throw new Error(text || ('HTTP ' + r.status));
+      try {
+        return JSON.parse(text);
+      } catch {
+        return { ok: true, message: text };
+      }
+    })
+    .then(res => {
+      if (res && res.ok) {
+        msg.style.color = 'green';
+        msg.textContent = '✅ फ़ॉर्म सफलतापूर्वक सबमिट हुआ!';
+        f.reset();
+      } else {
+        throw new Error(res && res.error ? res.error : 'Unknown error');
+      }
+    })
+    .catch(err => {
+      msg.style.color = 'red';
+      msg.textContent = '❌ Submit failed: ' + err.message;
+      console.error(err);
+    });
+  };
+
+  /* यह लाइन फ़ाइल को Base64 में बदलकर reader.onload पर भेजती है */
   reader.readAsDataURL(file);
 });
 </script>
-</body>
-</html>

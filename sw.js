@@ -1,9 +1,10 @@
-const CACHE = 'vrp-offline-v1';
+const CACHE = 'vrp-offline-v2';
 const ASSETS = [
   './',
   './index.html',
   './sw.js',
-  './manifest.webmanifest'
+  './manifest.webmanifest',
+  './options.json'
 ];
 
 self.addEventListener('install', (e) => {

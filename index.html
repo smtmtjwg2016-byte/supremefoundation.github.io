@@ -3,180 +3,75 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Volunteer Resignation Portal — Offline Capture</title>
-<link rel="manifest" href="manifest.webmanifest">
+<title>Volunteer Resignation Form</title>
 <style>
-  body { font-family: system-ui, Arial, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 12px; }
-  .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  label { font-size: 12px; color: #374151; display:block; margin-bottom: 6px; }
-  input, select, textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; }
-  button { padding: 10px 16px; border: 0; border-radius: 8px; cursor: pointer; }
-  .primary { background:#111827; color:#fff; }
-  .muted { color:#6b7280; }
-  .error { color:#b91c1c; }
-  .success { color:#065f46; }
-  .pill { display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid #d1d5db; font-size:12px; margin-left:8px; }
+  body { font-family: Arial, sans-serif; max-width: 800px; margin: 30px auto; padding: 0 16px; background:#f9fafb; }
+  h2 { text-align: center; }
+  form { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+  label { font-weight: 600; margin-top: 10px; display: block; }
+  input, select, textarea { width: 100%; padding: 10px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+  button { margin-top: 15px; padding: 10px 18px; background:#1d4ed8; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+  button:hover { background:#2563eb; }
+  #msg { margin-top: 15px; font-weight: 600; }
 </style>
 </head>
 <body>
-  <h2>Volunteer Resignation — Offline Capture</h2>
-  <p class="muted">
-    यह पेज <strong>ऑफ़लाइन भी चलता</strong> है। इंटरनेट न होने पर <em>Save Offline</em> दबाएँ।
-    जब नेट आए, <em>Sync Now</em> दबाकर Google Sheet पर भेज दें।
-  </p>
+  <h2>Volunteer Resignation Submission</h2>
+  <form id="resignForm">
+    <label>SR No.</label>
+    <input type="text" name="srNo" required>
 
-  <div class="card">
-    <strong>Status:</strong>
-    <span id="net" class="pill">checking…</span>
-    <span id="queued" class="pill">queued: 0</span>
-  </div>
+    <label>Date of Resignation</label>
+    <input type="date" name="dateISO" required>
 
-  <form id="resignForm" class="card">
-    <div class="row">
-      <div>
-        <label>SR No.</label>
-        <input type="text" name="srNo" required />
-      </div>
-      <div>
-        <label>Date of Resignation</label>
-        <input type="date" name="dateISO" required />
-      </div>
-    </div>
+    <label>Volunteer Name</label>
+    <input type="text" name="volunteerName" required>
 
-    <div class="row">
-      <div>
-        <label>Volunteer Name</label>
-        <input type="text" name="volunteerName" required />
-      </div>
-      <div>
-        <label>Location</label>
-       <select name="location" id="locSelect" required>
-  <option value="">-- Select Location --</option>
-  <option>LADNUN</option>
-  <option>KBBS</option>
-  <option>JHUNJHUNU</option>
-  <option>ADNT</option>
-  <option>BHG</option>
-</select>
+    <label>Location</label>
+    <select name="location" required>
+      <option value="">-- Select Location --</option>
+      <option>LADNUN</option>
+      <option>KBBS</option>
+      <option>JHUNJHUNU</option>
+      <option>ADNT</option>
+      <option>BHG</option>
+    </select>
 
-    <div class="row">
-      <div>
-        <label>Coordinator Name</label>
-        <select name="coordinatorName" id="coordSelect" required>
-  <option value="">-- Select Coordinator --</option>
-  <option>DILEEP SINGH CHOUHAN</option>
-  <option>KEDAR PANDEY</option>
-  <option>BALBIR SHARMA</option>
-  <option>VISHNU SHARMA</option>
-  <option>ROHIT SHARMA</option>
-</select>
-        <label>Resignation Letter (PDF/Image)</label>
-        <input type="file" id="file" accept="application/pdf,image/*" />
-      </div>
-    </div>
+    <label>Coordinator Name</label>
+    <select name="coordinatorName" required>
+      <option value="">-- Select Coordinator --</option>
+      <option>DILEEP SINGH CHOUHAN</option>
+      <option>KEDAR PANDEY</option>
+      <option>BALBIR SHARMA</option>
+      <option>VISHNU SHARMA</option>
+      <option>ROHIT SHARMA</option>
+    </select>
 
-    <div>
-      <label>Reason for Leaving</label>
-      <textarea name="reason" rows="3" required></textarea>
-    </div>
+    <label>Resignation Letter (PDF/Image)</label>
+    <input type="file" id="file" accept="application/pdf,image/*" required>
 
-    <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
-      <button type="submit" class="primary">Submit (Online)</button>
-      <button type="button" id="saveOffline">Save Offline</button>
-      <button type="button" id="syncNow">Sync Now</button>
-      <button type="reset">Reset</button>
-    </div>
+    <label>Reason for Leaving</label>
+    <textarea name="reason" rows="3" required></textarea>
 
-    <div id="msg" style="margin-top:10px;"></div>
+    <button type="submit">Submit</button>
+    <div id="msg"></div>
   </form>
 
-  <div class="card">
-    <strong>How offline works?</strong>
-    <ol>
-      <li>बिना इंटरनेट: <em>Save Offline</em> दबाएँ (यह टेक्स्ट डेटा को फोन में सेव कर देता है)।</li>
-      <li>नेट आने पर: <em>Sync Now</em> दबाएँ — यह हर सेव एंट्री के लिए फाइल चुनने को कहेगा और Google Sheet पर भेज देगा।</li>
-      <li>एक बार भेजने के बाद वह एंट्री क्यू से हट जाएगी।</li>
-    </ol>
-  </div>
-
 <script>
-// 1) आपका Apps Script URL यहाँ डालें:
+// ======= SET YOUR GOOGLE APPS SCRIPT WEB APP URL HERE =======
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybVCtJ7LtUvzVUSDsT_lZh9Mqc1RDaOn5tsWR5Bgt-tXuGUyIn7nOskr76uW0xYlXKhA/exec";
 
-// 2) Fallback arrays (अगर options.json न मिले तो)
-const FALLBACK_LOCATIONS = ["LADNUN", "KBBS", "JHUNJHUNU", "ADNT", "BHG"];
-const FALLBACK_COORDINATORS = ["DILEEP SINGH CHOUHAN", "KEDAR PANDEY", "BALBIR SHARMA", "VISHNU SHARMA", "ROHIT SHARMA"];
-
-const KEY = 'offline_resign_queue_v1';
-
-const net = document.getElementById('net');
-const queued = document.getElementById('queued');
-const msg = document.getElementById('msg');
 const form = document.getElementById('resignForm');
-const saveOfflineBtn = document.getElementById('saveOffline');
-const syncNowBtn = document.getElementById('syncNow');
-const locSelect = document.getElementById('locSelect');
-const coordSelect = document.getElementById('coordSelect');
-
-function setMsg(text, ok=false) { msg.textContent = text; msg.className = ok ? 'success' : 'error'; }
-
-function getQueue() {
-  try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
-  catch(e) { return []; }
-}
-function setQueue(arr) {
-  localStorage.setItem(KEY, JSON.stringify(arr));
-  queued.textContent = 'queued: ' + arr.length;
-}
-
-function updateOnlineStatus() {
-  net.textContent = navigator.onLine ? 'online' : 'offline';
-}
-window.addEventListener('online', updateOnlineStatus);
-window.addEventListener('offline', updateOnlineStatus);
-
-// Populate dropdowns: try options.json → else fallback arrays
-async function populateOptions() {
-  let locations = FALLBACK_LOCATIONS.slice();
-  let coordinators = FALLBACK_COORDINATORS.slice();
-  try {
-    const res = await fetch('./options.json', {cache:'reload'});
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data.locations)) locations = data.locations;
-      if (Array.isArray(data.coordinators)) coordinators = data.coordinators;
-    }
-  } catch(e) {
-    // ignore, will use fallback
-  }
-  // fill selects
-  locSelect.innerHTML = '<option value="">-- Select Location --</option>';
-  locations.forEach(l => {
-    const opt = document.createElement('option');
-    opt.value = l; opt.textContent = l;
-    locSelect.appendChild(opt);
-  });
-  coordSelect.innerHTML = '<option value="">-- Select Coordinator --</option>';
-  coordinators.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c; opt.textContent = c;
-    coordSelect.appendChild(opt);
-  });
-}
-
-updateOnlineStatus();
-setQueue(getQueue());
-populateOptions();
+const msg = document.getElementById('msg');
 
 form.addEventListener('submit', function(ev){
   ev.preventDefault();
-  if (!navigator.onLine) { setMsg('You are offline. Use "Save Offline".'); return; }
   const f = ev.target;
   const file = document.getElementById('file').files[0];
-  if (!file) { setMsg('Please attach PDF/Image to submit online.'); return; }
-  const r = new FileReader();
-  r.onload = function() { 
+  if (!file) { msg.textContent = 'Please attach a file.'; return; }
+
+  const reader = new FileReader();
+  reader.onload = function() {
     const payload = {
       srNo: f.srNo.value.trim(),
       volunteerName: f.volunteerName.value.trim(),
@@ -184,92 +79,29 @@ form.addEventListener('submit', function(ev){
       coordinatorName: f.coordinatorName.value.trim(),
       dateISO: f.dateISO.value,
       reason: f.reason.value.trim(),
-      file: { name: file.name, mimeType: file.type, dataUrl: r.result }
+      file: { name: file.name, mimeType: file.type, dataUrl: reader.result }
     };
-    setMsg('Submitting…');
-    fetch(WEB_APP_URL, { method:'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' } })
-      .then(x => x.json ? x.json() : x.text())
-      .then(res => { setMsg('Submitted successfully', true); f.reset(); })
-      .catch(err => { setMsg('Submit failed: ' + err); });
+
+    msg.textContent = 'Submitting...';
+
+    fetch(WEB_APP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(async (r) => {
+      const text = await r.text();
+      if (!r.ok) throw new Error(text || ('HTTP ' + r.status));
+      try { return JSON.parse(text); } catch { return { ok: true, message: text }; }
+    })
+    .then(res => {
+      if (res && res.ok) { msg.style.color='green'; msg.textContent='Submitted successfully!'; f.reset(); }
+      else { throw new Error(res && res.error ? res.error : 'Unknown error'); }
+    })
+    .catch(err => { msg.style.color='red'; msg.textContent='Submit failed: ' + err.message; });
   };
-  r.readAsDataURL(file);
+  reader.readAsDataURL(file);
 });
-
-saveOfflineBtn.addEventListener('click', function(){
-  const f = form;
-  const entry = {
-    srNo: f.srNo.value.trim(),
-    volunteerName: f.volunteerName.value.trim(),
-    location: f.location.value.trim(),
-    coordinatorName: f.coordinatorName.value.trim(),
-    dateISO: f.dateISO.value,
-    reason: f.reason.value.trim(),
-    needsFile: true,
-    createdAt: Date.now()
-  };
-  if (!entry.srNo || !entry.volunteerName || !entry.location || !entry.coordinatorName || !entry.dateISO || !entry.reason) { 
-    setMsg('Fill all fields before saving offline.'); return; 
-  }
-  const q = getQueue(); q.push(entry); setQueue(q);
-  setMsg('Saved offline. Use "Sync Now" when online.', true);
-  f.reset();
-});
-
-syncNowBtn.addEventListener('click', async function(){
-  if (!navigator.onLine) { setMsg('Still offline. Turn on internet then Sync.'); return; }
-  let q = getQueue();
-  if (!q.length) { setMsg('No offline entries to sync.'); return; }
-  setMsg('Syncing ' + q.length + ' item(s)…');
-  let okCount = 0;
-  for (let i=0; i<q.length; i++) {
-    const item = q[i];
-    let file = null;
-    try {
-      file = await new Promise((resolve,reject)=>{
-        const input = document.createElement('input');
-        input.type='file';
-        input.accept='application/pdf,image/*';
-        input.onchange = ()=> resolve(input.files[0] || null);
-        input.click();
-      });
-    } catch(e) { file = null; }
-    if (!file) { setMsg('Skipped one entry: no file selected.'); continue; }
-    const reader = new FileReader();
-    const res = await new Promise((resolve) => {
-      reader.onload = function() {
-        const payload = {
-          srNo: item.srNo,
-          volunteerName: item.volunteerName,
-          location: item.location,
-          coordinatorName: item.coordinatorName,
-          dateISO: item.dateISO,
-          reason: item.reason,
-          file: { name: file.name, mimeType: file.type, dataUrl: reader.result }
-        };
-        fetch(WEB_APP_URL, { method:'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' } })
-          .then(x => x.json ? x.json() : x.text())
-          .then(()=> resolve(true))
-          .catch(()=> resolve(false));
-      };
-      reader.readAsDataURL(file);
-    });
-    if (res) { okCount++; } else { /* keep in queue */ }
-  }
-  if (okCount > 0) {
-    q = [];
-    setQueue(q);
-  }
-  setMsg('Sync finished. Success: ' + okCount + '.', okCount>0);
-});
-</script>
-
-<script>
-// register service worker for offline caching
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./sw.js');
-  });
-}
 </script>
 </body>
 </html>

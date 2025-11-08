@@ -105,22 +105,23 @@ form.addEventListener('submit', function(ev){
 
     msg.textContent = 'Submitting...';
 
-    fetch(WEB_APP_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(async (r) => {
-      const text = await r.text();
-      if (!r.ok) throw new Error(text || ('HTTP ' + r.status));
-      try { return JSON.parse(text); } catch { return { ok: true, message: text }; }
-    })
-    .then(res => {
-      if (res && res.ok) { msg.style.color='green'; msg.textContent='Submitted successfully!'; f.reset(); }
-      else { throw new Error(res && res.error ? res.error : 'Unknown error'); }
-    })
-    .catch(err => { msg.style.color='red'; msg.textContent='Submit failed: ' + err.message; });
-  };
+   fetch(WEB_APP_URL, {
+  method: 'POST',
+  // application/json के बजाय text/plain रखें ताकि CORS preflight न हो
+  headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+  body: JSON.stringify(payload)
+})
+.then(async (r) => {
+  const text = await r.text();
+  if (!r.ok) throw new Error(text || ('HTTP ' + r.status));
+  try { return JSON.parse(text); } catch { return { ok: true, message: text }; }
+})
+.then(res => {
+  if (res && res.ok) { msg.style.color='green'; msg.textContent='Submitted successfully!'; form.reset(); }
+  else { throw new Error(res && res.error ? res.error : 'Unknown error'); }
+})
+.catch(err => { msg.style.color='red'; msg.textContent='Submit failed: ' + err.message; });
+</script>
   reader.readAsDataURL(file);
 });
 </script>

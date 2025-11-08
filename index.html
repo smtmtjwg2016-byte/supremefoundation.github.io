@@ -14,29 +14,10 @@
   button:hover { background:#2563eb; }
   #msg { margin-top: 15px; font-weight: 600; }
 </style>
-
-<!-- One-time: पुराना service worker हटाने के लिए -->
-<script>
-(async () => {
-  try {
-    if ('serviceWorker' in navigator) {
-      const regs = await navigator.serviceWorker.getRegistrations();
-      for (const r of regs) await r.unregister();
-    }
-    if (window.caches && caches.keys) {
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
-    }
-    if (!location.search.includes('nocache=1')) {
-      history.replaceState(null, '', location.pathname + '?nocache=1');
-    }
-  } catch(e) { console.log('SW clear error', e); }
-})();
-</script>
 </head>
-
 <body>
   <h2>Volunteer Resignation Submission</h2>
+
   <form id="resignForm">
     <label>SR No.</label>
     <input type="text" name="srNo" required>
@@ -78,8 +59,8 @@
   </form>
 
 <script>
-// 👉 अपना Apps Script Web App /exec URL यहाँ रखें:
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybVCtJ7LtUvzVUSDsT_lZh9Mqc1RDaOn5tsWR5Bgt-tXuGUyIn7nOskr76uW0xYlXKhA/exec";
+// 👉 अपना Apps Script Web App /exec URL यहाँ डालें:
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwhFZcKuAmqeu-33tCOlPInta6f5Nd0MAyhKq-OX4dhpnIgSChPs4yXNVoOHeIIhVYu/execc";
 
 const form = document.getElementById('resignForm');
 const msg  = document.getElementById('msg');
@@ -88,7 +69,7 @@ form.addEventListener('submit', function(ev){
   ev.preventDefault();
   const f = ev.target;
   const file = document.getElementById('file').files[0];
-  if (!file) { msg.style.color='red'; msg.textContent='Please attach a file.'; return; }
+  if (!file) { msg.style.color='red'; msg.textContent='कृपया फ़ाइल (PDF/Image) अपलोड करें.'; return; }
 
   const reader = new FileReader();
   reader.onload = function() {
@@ -103,11 +84,12 @@ form.addEventListener('submit', function(ev){
     };
 
     msg.style.color='black';
-    msg.textContent = 'Submitting...';
+    msg.textContent='Submitting…';
 
+    // text/plain ताकि CORS preflight ना हो
     fetch(WEB_APP_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, // simple request (no CORS preflight)
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
       body: JSON.stringify(payload)
     })
     .then(async (r) => {
@@ -131,7 +113,7 @@ form.addEventListener('submit', function(ev){
     });
   };
 
-  // फ़ाइल को Base64 में पढ़ें
+  // फ़ाइल Base64 में पढ़कर भेजें
   reader.readAsDataURL(file);
 });
 </script>
